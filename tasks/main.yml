@@ -1,0 +1,27 @@
+---
+# make dir
+- name: Make dir
+  ansible.builtin.file:
+    path: /home/ansible/restic
+    state: directory
+    mode: '0755'
+
+# Copy template
+- name: Copy template
+  ansible.builtin.template:
+    src: restic.yml.j2
+    dest: /home/ansible/restic/.autorestic.yml
+
+# run autorestic
+- name: Run autorestic check
+  ansible.builtin.command:
+    cmd: autorestic check
+    chdir: /home/ansible/restic
+
+- name: Remove forgetoptions line
+  ansible.builtin.lineinfile:
+    path: /home/ansible/restic/.autorestic.yml
+    regexp: '^forgetoption: ""$'
+    state: absent
+
+# 0 0 * * 0 cd /home/ansible/restic && autorestic backup -a

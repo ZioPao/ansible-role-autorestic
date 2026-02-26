@@ -1,0 +1,11 @@
+---
+
+portainer_deployer_network: ""
+
+portainer_deployer_only_agent: false
+portainer_deployer_appdata_path: ""
+
+portainer_deployer_traefik_enable: false
+portainer_deployer_traefik_host: ""
+portainer_deployer_traefik_entrypoint: "websecure"
+portainer_deployer_traefik_certresolver: "resolver"
