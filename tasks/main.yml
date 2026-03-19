@@ -20,6 +20,7 @@
     mode: '0755'
     owner: root
     group: root
+  become: true
 
 # --- Deploy config ---
 - name: Create restic config directory
@@ -40,6 +41,7 @@
 
 # --- Root crontab ---
 - name: Add autorestic backup cron job (root)
+  become: true
   ansible.builtin.cron:
     name: "autorestic backup"
     user: root
