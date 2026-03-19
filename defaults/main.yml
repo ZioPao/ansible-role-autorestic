@@ -1,6 +1,19 @@
 ---
-autorestic_dest_path: ""
+# S3 / Backblaze credentials
 access_key_id: ""
 secret_access_key: ""
 bucket: ""
 
+# Template variables
+backblazeb2: ""       # e.g. s3.us-west-002.backblazeb2.com
+vm: ""                # VM identifier used in bucket path and location name
+remote_key: ""        # autorestic backend key
+
+# Autorestic install
+autorestic_version: "1.8.3"
+
+# Cron schedule (standard 5-field cron expression, e.g. "0 2 * * *")
+autorestic_cron_time: "0 2 * * *"
+
+# Healthcheck URL (e.g. https://hc-ping.com/uuid)
+autorestic_healthcheck_url: ""

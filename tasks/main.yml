@@ -1,27 +1,51 @@
 ---
-# make dir
-- name: Make dir
+# --- Install autorestic ---
+- name: Download autorestic binary
+  ansible.builtin.get_url:
+    url: "https://github.com/cupcakearmy/autorestic/releases/download/v{{ autorestic_version }}/autorestic_{{ autorestic_version }}_linux_amd64.bz2"
+    dest: /tmp/autorestic.bz2
+    mode: '0644'
+
+- name: Decompress autorestic binary
+  ansible.builtin.command:
+    cmd: bunzip2 -f /tmp/autorestic.bz2
+  args:
+    creates: /tmp/autorestic
+
+- name: Install autorestic to /usr/local/bin
+  ansible.builtin.copy:
+    src: /tmp/autorestic
+    dest: /usr/local/bin/autorestic
+    remote_src: true
+    mode: '0755'
+    owner: root
+    group: root
+
+# --- Deploy config ---
+- name: Create restic config directory
   ansible.builtin.file:
     path: /home/ansible/restic
     state: directory
     mode: '0755'
+    owner: ansible
+    group: ansible
 
-# Copy template
-- name: Copy template
+- name: Deploy autorestic config
   ansible.builtin.template:
-    src: restic.yml.j2
+    src: autorestic.yml.j2
     dest: /home/ansible/restic/.autorestic.yml
+    mode: '0600'
+    owner: ansible
+    group: ansible
 
-# run autorestic
-- name: Run autorestic check
-  ansible.builtin.command:
-    cmd: autorestic check
-    chdir: /home/ansible/restic
-
-- name: Remove forgetoptions line
-  ansible.builtin.lineinfile:
-    path: /home/ansible/restic/.autorestic.yml
-    regexp: '^forgetoption: ""$'
-    state: absent
-
-# 0 0 * * 0 cd /home/ansible/restic && autorestic backup -a
+# --- Root crontab ---
+- name: Add autorestic backup cron job (root)
+  ansible.builtin.cron:
+    name: "autorestic backup"
+    user: root
+    minute: "{{ autorestic_cron_time.split(' ')[0] }}"
+    hour: "{{ autorestic_cron_time.split(' ')[1] }}"
+    day: "{{ autorestic_cron_time.split(' ')[2] }}"
+    month: "{{ autorestic_cron_time.split(' ')[3] }}"
+    weekday: "{{ autorestic_cron_time.split(' ')[4] }}"
+    job: "cd /home/ansible/restic && autorestic backup -a && curl -fsS -m 10 --retry 5 -o /dev/null {{ autorestic_healthcheck_url }}"

@@ -1,0 +1,33 @@
+backends:
+  remote:
+    type: s3
+    path: {{ backblazeb2 }}/backup-pao/appdata-{{ vm }}
+    key: {{ remote_key }}
+    requirekey: false
+    env:
+      aws_access_key_id: {{ access_key_id }}
+      aws_secret_access_key: {{ secret_access_key }}
+    rest:
+      user: ""
+      password: ""
+    options: {}
+locations:
+  appdata_{{ vm }}:
+    from:
+    - /home/ansible/appdata
+    type: ""
+    to:
+    - remote
+    hooks:
+      dir: ""
+      prevalidate: []
+      before: []
+      after: []
+      success: []
+      failure: []
+    cron: ""
+    options:
+        forget:
+            keep-last:5
+    copyoption: {}
+version: 2
