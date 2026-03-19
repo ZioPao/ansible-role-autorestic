@@ -23,13 +23,13 @@
   become: true
 
 # --- Deploy config ---
-- name: Create restic config directory
-  ansible.builtin.file:
-    path: /home/ansible/restic
-    state: directory
-    mode: '0755'
-    owner: ansible
-    group: ansible
+# - name: Create restic config directory
+#   ansible.builtin.file:
+#     path: /home/ansible/restic
+#     state: directory
+#     mode: '0755'
+#     owner: ansible
+#     group: ansible
 
 - name: Deploy autorestic config
   ansible.builtin.template:
@@ -50,4 +50,4 @@
     day: "{{ autorestic_cron_time.split(' ')[2] }}"
     month: "{{ autorestic_cron_time.split(' ')[3] }}"
     weekday: "{{ autorestic_cron_time.split(' ')[4] }}"
-    job: "cd /home/ansible/restic && autorestic backup -a && curl -fsS -m 10 --retry 5 -o /dev/null {{ autorestic_healthcheck_url }}"
+    job: "autorestic backup -a -c /home/ansible/.autorestic.yml && curl -fsS -m 10 --retry 5 -o /dev/null {{ autorestic_healthcheck_url }}"
