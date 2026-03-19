@@ -34,7 +34,7 @@
 - name: Deploy autorestic config
   ansible.builtin.template:
     src: autorestic.yml.j2
-    dest: /home/ansible/restic/.autorestic.yml
+    dest: ~/.autorestic.yml
     mode: '0600'
     owner: ansible
     group: ansible
