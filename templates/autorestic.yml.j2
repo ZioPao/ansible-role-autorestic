@@ -30,5 +30,12 @@ locations:
     options:
       forget:
         keep-last: 5
+{% if autorestic_backup_excludes is defined and autorestic_backup_excludes | length > 0 %}
+      backup:
+        exclude:
+{% for path in autorestic_backup_excludes %}
+          - {{ path }}
+{% endfor %}
+{% endif %}
     copyoption: {}
 version: 2

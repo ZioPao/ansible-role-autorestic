@@ -17,3 +17,7 @@ autorestic_cron_time: "0 2 * * *"
 
 # Healthcheck URL (e.g. https://hc-ping.com/uuid)
 autorestic_healthcheck_url: ""
+
+# Backup exclusions (list of paths to exclude from backup)
+# autorestic_backup_excludes:
+#   - /home/ansible/appdata/some-dir
