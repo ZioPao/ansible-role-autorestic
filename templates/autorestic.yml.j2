@@ -15,6 +15,11 @@ locations:
   appdata_{{ vm }}:
     from:
     - /home/ansible/appdata
+{% if autorestic_extra_locations is defined and autorestic_extra_locations | length > 0 %}
+{% for path in autorestic_extra_locations %}
+    - {{ path }}
+{% endfor %}
+{% endif %}
     type: ""
     to:
     - remote

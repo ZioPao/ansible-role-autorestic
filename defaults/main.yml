@@ -21,3 +21,4 @@ autorestic_healthcheck_url: ""
 # Backup exclusions (list of paths to exclude from backup)
 # autorestic_backup_excludes:
 #   - /home/ansible/appdata/some-dir
+autorestic_extra_locations: []
